@@ -208,6 +208,17 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+vim.keymap.set('n', '<localleader>ip', function()
+  local venv = os.getenv 'VIRTUAL_ENV' or os.getenv 'CONDA_PREFIX'
+  if venv ~= nil then
+    -- in the form of /home/benlubas/.virtualenvs/VENV_NAME
+    venv = string.match(venv, '/.+/(.+)')
+    vim.cmd(('MoltenInit %s'):format(venv))
+  else
+    vim.cmd 'MoltenInit python3'
+  end
+end, { desc = 'Initialize Molten for python3', silent = true })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
