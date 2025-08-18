@@ -25,4 +25,14 @@ return {
       window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', '' },
     },
   },
+  {
+    'GCBallesteros/jupytext.nvim',
+    config = function()
+      require('jupytext').setup {
+        style = 'markdown',
+        output_extension = 'md',
+        force_ft = 'markdown',
+      }
+    end,
+  },
 }
