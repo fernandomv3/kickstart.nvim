@@ -95,6 +95,7 @@ vim.g.have_nerd_font = true
 
 -- Set Python3 virtualenv for neovim
 vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim/bin/python3'
+vim.env.PATH = vim.fn.expand '~/.virtualenvs/neovim/bin' .. ':' .. vim.env.PATH
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
