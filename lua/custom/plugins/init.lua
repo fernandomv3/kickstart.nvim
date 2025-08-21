@@ -3,45 +3,70 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  {
-    'benlubas/molten-nvim',
-    version = '^1.0.0', -- use version <2.0.0 to avoid breaking changes
-    build = ':UpdateRemotePlugins',
+  { -- send code from python/r/qmd documets to a terminal or REPL
+    -- like ipython, R, bash
+    'jpalardy/vim-slime',
+    dev = false,
     init = function()
-      -- this is an example, not a default. Please see the readme for more configuration options
-      vim.g.molten_output_win_max_height = 12
-      vim.g.molten_auto_open_output = false
-      -- this guide will be using image.nvim
-      vim.g.molten_image_provider = 'image.nvim'
-      -- optional, I like wrapping. works for virt text and the output window
-      vim.g.molten_wrap_output = true
-      -- Output as virtual text. Allows outputs to always be shown, works with images, but can
-      -- be buggy with longer images
-      vim.g.molten_virt_text_output = true
-      -- this will make it so the output shows up below the \`\`\` cell delimiter
-      vim.g.molten_virt_lines_off_by_1 = true
+      vim.b['quarto_is_python_chunk'] = false
+      Quarto_is_in_python_chunk = function()
+        require('otter.tools.functions').is_otter_language_context 'python'
+      end
 
-      vim.keymap.set('n', '<localleader>ip', function()
-        local venv = os.getenv 'VIRTUAL_ENV' or os.getenv 'CONDA_PREFIX'
-        if venv ~= nil then
-          -- in the form of /home/benlubas/.virtualenvs/VENV_NAME
-          venv = string.match(venv, '/.+/(.+)')
-          vim.cmd(('MoltenInit %s'):format(venv))
-        else
-          vim.cmd 'MoltenInit python3'
-        end
-      end, { desc = 'Initialize Molten for python3', silent = true })
+      vim.cmd [[
+      let g:slime_dispatch_ipython_pause = 100
+      function SlimeOverride_EscapeText_quarto(text)
+      call v:lua.Quarto_is_in_python_chunk()
+      if exists('g:slime_python_ipython') && len(split(a:text,"\n")) > 1 && b:quarto_is_python_chunk && !(exists('b:quarto_is_r_mode') && b:quarto_is_r_mode)
+      return ["%cpaste -q\n", g:slime_dispatch_ipython_pause, a:text, "--", "\n"]
+      else
+      if exists('b:quarto_is_r_mode') && b:quarto_is_r_mode && b:quarto_is_python_chunk
+      return [a:text, "\n"]
+      else
+      return [a:text]
+      end
+      end
+      endfunction
+      ]]
 
-      vim.keymap.set('n', '<localleader>mi', ':MoltenInit<CR>', { silent = true, desc = 'Initialize the plugin' })
-      vim.keymap.set('n', '<localleader>e', ':MoltenEvaluateOperator<CR>', { silent = true, desc = 'run operator selection' })
-      vim.keymap.set('n', '<localleader>os', ':noautocmd MoltenEnterOutput<CR>', { desc = 'open output window', silent = true })
-      vim.keymap.set('n', '<localleader>rr', ':MoltenReevaluateCell<CR>', { silent = true, desc = 're-evaluate cell' })
-      vim.keymap.set('v', '<localleader>r', ':<C-u>MoltenEvaluateVisual<CR>gv', { silent = true, desc = 'evaluate visual selection' })
-      vim.keymap.set('n', '<localleader>oh', ':MoltenHideOutput<CR>', { desc = 'close output window', silent = true })
-      vim.keymap.set('n', '<localleader>md', ':MoltenDelete<CR>', { desc = 'delete Molten cell', silent = true })
-      -- if you work with html outputs:
-      vim.keymap.set('n', '<localleader>mx', ':MoltenOpenInBrowser<CR>', { desc = 'open output in browser', silent = true })
+      vim.g.slime_target = 'neovim'
+      vim.g.slime_no_mappings = true
+      vim.g.slime_python_ipython = 1
     end,
+    config = function()
+      vim.g.slime_input_pid = false
+      vim.g.slime_suggest_default = true
+      vim.g.slime_menu_config = false
+      vim.g.slime_neovim_ignore_unlisted = true
+
+      local function mark_terminal()
+        local job_id = vim.b.terminal_job_id
+        vim.print('job_id: ' .. job_id)
+      end
+
+      local function set_terminal()
+        vim.fn.call('slime#config', {})
+      end
+      vim.keymap.set('n', '<leader>cm', mark_terminal, { desc = '[m]ark terminal' })
+      vim.keymap.set('n', '<leader>cs', set_terminal, { desc = '[s]et terminal' })
+    end,
+  },
+  {
+    'linux-cultist/venv-selector.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'mfussenegger/nvim-dap',
+      'mfussenegger/nvim-dap-python', --optional
+      { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+    },
+    lazy = false,
+    branch = 'regexp', -- This is the regexp branch, use this for the new version
+    keys = {
+      { ',v', '<cmd>VenvSelect<cr>' },
+    },
+    opts = {
+      -- Your settings go here
+    },
   },
   {
     -- see the image.nvim readme for more information about configuring this plugin
