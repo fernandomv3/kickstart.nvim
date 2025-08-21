@@ -60,9 +60,9 @@ return {
     'GCBallesteros/jupytext.nvim',
     config = function()
       require('jupytext').setup {
-        style = 'markdown',
-        output_extension = 'md',
-        force_ft = 'markdown',
+        style = 'quarto',
+        output_extension = 'qmd',
+        force_ft = 'quarto',
       }
     end,
   },
@@ -89,7 +89,7 @@ return {
         },
         codeRunner = {
           enabled = true,
-          default_method = 'molten',
+          default_method = 'slime',
         },
       }
       local runner = require 'quarto.runner'
