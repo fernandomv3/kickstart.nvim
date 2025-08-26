@@ -65,7 +65,12 @@ return {
       { ',v', '<cmd>VenvSelect<cr>' },
     },
     opts = {
-      -- Your settings go here
+      search = {
+        anaconda_base = {
+          command = 'fd /python$ ' .. vim.fn.expand '~/anaconda3/bin' .. ' --full-path --color never -E /proc',
+          type = 'anaconda',
+        },
+      },
     },
   },
   {
