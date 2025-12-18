@@ -679,9 +679,10 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
+        ty = {},
         ruff = {},
-        mypy = {},
+        -- mypy = {},
         black = {},
         debugpy = {},
         jsonlint = {},
