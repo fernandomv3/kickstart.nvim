@@ -38,7 +38,8 @@ return {
       vim.g.slime_suggest_default = true
       vim.g.slime_menu_config = false
       vim.g.slime_neovim_ignore_unlisted = true
-
+      vim.keymap.set('n', '<leader>r', '<Plug>SlimeLineSend', { desc = '[r]un line' })
+      vim.keymap.set('v', '<leader>r', '<Plug>SlimeRegionSend', { desc = '[r]un selection' })
       local function mark_terminal()
         local job_id = vim.b.terminal_job_id
         vim.print('job_id: ' .. job_id)
