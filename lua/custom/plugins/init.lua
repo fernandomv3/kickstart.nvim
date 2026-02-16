@@ -52,6 +52,7 @@ return {
       vim.keymap.set('n', '<leader>cs', set_terminal, { desc = '[s]et terminal' })
       vim.keymap.set('n', '<leader>ti', "<cmd>vsplit term://zsh -i -c 'conda activate; ipython'<CR><cmd>norm G<CR>", { desc = 'Base conda [i]python' })
       vim.keymap.set('n', '<leader>tp', "<cmd>vsplit term://zsh -i -c 'source venv/bin/activate; python'<CR><cmd>norm G<CR>", { desc = 'Local venv python' })
+      vim.keymap.set('n', '<leader>tl', "<cmd>vsplit term://zsh -i -c 'source venv/bin/activate; ipython'<CR><cmd>norm G<CR>", { desc = 'Local venv ipython' })
       vim.keymap.set('n', '<leader>tu', "<cmd>vsplit term://zsh -i -c 'source .venv/bin/activate; python'<CR><cmd>norm G<CR>", { desc = 'Local .venv python' })
     end,
   },
