@@ -332,6 +332,7 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
+    version = '0.2.1',
     -- By default, Telescope is included and acts as your picker for everything.
 
     -- If you would like to switch to a different picker (like snacks, or fzf-lua)
@@ -869,7 +870,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python' }
       require('nvim-treesitter').install(filetypes)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
