@@ -9,9 +9,7 @@ return {
     dev = false,
     init = function()
       vim.b['quarto_is_python_chunk'] = false
-      Quarto_is_in_python_chunk = function()
-        require('otter.tools.functions').is_otter_language_context 'python'
-      end
+      Quarto_is_in_python_chunk = function() require('otter.tools.functions').is_otter_language_context 'python' end
 
       vim.cmd [[
       let g:slime_dispatch_ipython_pause = 100
@@ -45,9 +43,7 @@ return {
         vim.print('job_id: ' .. job_id)
       end
 
-      local function set_terminal()
-        vim.fn.call('slime#config', {})
-      end
+      local function set_terminal() vim.fn.call('slime#config', {}) end
       vim.keymap.set('n', '<leader>cm', mark_terminal, { desc = '[m]ark terminal' })
       vim.keymap.set('n', '<leader>cs', set_terminal, { desc = '[s]et terminal' })
       vim.keymap.set('n', '<leader>ti', "<cmd>vsplit term://zsh -i -c 'conda activate; ipython'<CR><cmd>norm G<CR>", { desc = 'Base conda [i]python' })
@@ -59,16 +55,14 @@ return {
   {
     'linux-cultist/venv-selector.nvim',
     dependencies = {
-      'neovim/nvim-lspconfig',
-      'mfussenegger/nvim-dap',
-      'mfussenegger/nvim-dap-python', --optional
-      { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+      { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } }, -- optional: you can also use fzf-lua, snacks, mini-pick instead.
     },
-    lazy = false,
+    ft = 'python', -- Load when opening Python files
     keys = {
-      { ',v', '<cmd>VenvSelect<cr>' },
+      { ',v', '<cmd>VenvSelect<cr>' }, -- Open picker on keymap
     },
     opts = {
+      options = {}, -- plugin-wide options
       search = {
         anaconda_base = {
           command = 'fd /python$ ' .. vim.fn.expand '~/anaconda3/bin' .. ' --full-path --color never -E /proc',
@@ -132,9 +126,7 @@ return {
       vim.keymap.set('n', '<localleader>rA', runner.run_all, { desc = 'run all cells', silent = true })
       vim.keymap.set('n', '<localleader>rl', runner.run_line, { desc = 'run line', silent = true })
       vim.keymap.set('v', '<localleader>r', runner.run_range, { desc = 'run visual range', silent = true })
-      vim.keymap.set('n', '<localleader>RA', function()
-        runner.run_all(true)
-      end, { desc = 'run all cells of all languages', silent = true })
+      vim.keymap.set('n', '<localleader>RA', function() runner.run_all(true) end, { desc = 'run all cells of all languages', silent = true })
       local wk = require 'which-key'
       local is_code_chunk = function()
         local current, _ = require('otter.keeper').get_current_language_context()
@@ -160,13 +152,9 @@ return {
         vim.api.nvim_feedkeys(keys, 'n', false)
       end
 
-      local insert_r_chunk = function()
-        insert_code_chunk 'r'
-      end
+      local insert_r_chunk = function() insert_code_chunk 'r' end
 
-      local insert_py_chunk = function()
-        insert_code_chunk 'python'
-      end
+      local insert_py_chunk = function() insert_code_chunk 'python' end
 
       -- normal mode
       wk.add({
