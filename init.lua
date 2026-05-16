@@ -99,7 +99,11 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
+
+  -- Set Python3 virtualenv for neovim
+  vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim/bin/python3'
+  vim.env.PATH = vim.fn.expand '~/.virtualenvs/neovim/bin' .. ':' .. vim.env.PATH
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -110,7 +114,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -157,6 +161,7 @@ do
   --   and `:help lua-guide-options`
   vim.o.list = true
   vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  vim.opt.shiftwidth = 2
 
   -- Preview substitutions live, as you type!
   vim.o.inccommand = 'split'
@@ -686,8 +691,13 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    -- clangd = {},
+    clangd = {},
     -- gopls = {},
+    ty = {},
+    ruff = {},
+    debugpy = {},
+    jsonlint = {},
+    xmlformatter = {},
     -- pyright = {},
     -- rust_analyzer = {},
     --
@@ -790,6 +800,10 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
+      lua = { 'stylua' },
+      svg = { 'xmlformatter' },
+      json = { 'clang-format' },
+      python = { 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
@@ -898,7 +912,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
